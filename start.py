@@ -3,7 +3,6 @@ from time import sleep
 from datetime import date
 
 def loadConfig():
-	#dia = "{}/{}/{}".format(day, mes, ano)
 	with open("/home/.myOwnJournal/config.edu", "r") as file:
 		data = file.readlines()
 		username = data[0].replace('nome ', '')
@@ -12,11 +11,27 @@ def loadConfig():
 
 	return username, email
 
+def readAll(u):
+	#identifica a quantidade de artigos e bota num arquivo
+	os.system("ls -l /home/.myOwnJournal/artigos/art* | wc -l > /home/.myOwnJournal/artigos/many.edu")
+	with open("/home/.myOwnJournal/artigos/many.edu") as howMany:
+		i = int(howMany.read())
+		os.system("clear")
+		for x in range(i): # indo em cada arquivo existente
+			with open("/home/.myOwnJournal/artigos/art{}.txt".format(x+1), "r") as file:
+				d = file.read()
+				print("--- {} --------------".format(x+1))
+				print(d) # mostrando os dados escritos no arquivo
+		y = input("Aperte [Enter] para voltar...")
+		menu()
+
+
 def menu():
+	os.system("clear")
 	username, email = loadConfig()
 	print("""
 #################################
-#	     Jornal		#
+#	     Diary		#
 #################################""")
 	print("Usuario: {} - Data: {}".format(username, date.today()))
 	print(".")
@@ -31,8 +46,7 @@ def menu():
 		res =  str(input("R="))
 
 		if res=="1":
-			#readAll()
-			print(".\nmostra todos os artigos")
+			readAll(username)
 
 		elif res=="2":
 			#writeFile()
@@ -46,6 +60,9 @@ def menu():
 		else:
 			#nao reconhecido
 			print("Comando nao reconhecido\nTente de novo\n.")
+			os.system("clear")
+			menu()
+
 def createConfig(n, e):
 	print(".\nusuario criado\n.")
 	conf = open("/home/.myOwnJournal/config.edu", "w")
