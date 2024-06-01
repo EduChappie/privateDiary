@@ -3,6 +3,7 @@ from time import sleep
 from datetime import date
 
 def loadConfig():
+	#carrega as informacoes dos nomes
 	with open("/home/.myOwnJournal/config.edu", "r") as file:
 		data = file.readlines()
 		username = data[0].replace('nome ', '')
@@ -11,19 +12,29 @@ def loadConfig():
 
 	return username, email
 
+# Funcao para ler todos os artigos
 def readAll(u):
 	#identifica a quantidade de artigos e bota num arquivo
 	os.system("ls -l /home/.myOwnJournal/artigos/art* | wc -l > /home/.myOwnJournal/artigos/many.edu")
-	with open("/home/.myOwnJournal/artigos/many.edu") as howMany:
+	with open("/home/.myOwnJournal/artigos/many.edu", "r") as howMany:
 		i = int(howMany.read())
 		os.system("clear")
+		if i==0:
+			return
+
 		for x in range(i): # indo em cada arquivo existente
 			with open("/home/.myOwnJournal/artigos/art{}.txt".format(x+1), "r") as file:
 				d = file.read()
 				print("--- {} --------------".format(x+1))
 				print(d) # mostrando os dados escritos no arquivo
 		y = input("Aperte [Enter] para voltar...")
-		menu()
+		return
+
+
+# Funcao para escrever os artigos
+def writeFile():
+	print(".\nescreva um artigo...")
+	os.system("sudo python3 display.py")
 
 
 def menu():
@@ -49,8 +60,7 @@ def menu():
 			readAll(username)
 
 		elif res=="2":
-			#writeFile()
-			print(".\nescreva um artigo")
+			writeFile()
 
 		elif res=="3":
 			#sair
@@ -68,6 +78,11 @@ def createConfig(n, e):
 	conf = open("/home/.myOwnJournal/config.edu", "w")
 	conf.write("nome {} \nemail {}".format(n, e))
 	conf.close()
+
+	many = open("/home/.myOwnJournal/artigos/many.edu", "w")
+	many.write("0")
+	many.close()
+
 	menu()
 
 

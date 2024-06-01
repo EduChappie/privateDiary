@@ -13,8 +13,23 @@ label1.place(width=600, height=60)
 
 def sendMSG():
 	v = art.get("1.0", END)
-	print("Enviando mensagem")
-	print(v)
+	print("escrevendo...")
+
+	#pegando a quantidade
+	with open("/home/.myOwnJournal/artigos/many.edu", "r") as quanto:
+		qtd = quanto.read()
+		qtd = int(qtd)
+
+		# adicionando valor no arquivo
+		artigo_atual = open("/home/.myOwnJournal/artigos/art{}.txt".format(qtd+1), "w")
+		artigo_atual.write(v)
+		artigo_atual.close()
+
+	# atualizando o arquivo de quantidade
+	ytq = open("/home/.myOwnJournal/artigos/many.edu", "w")
+	ytq.write(str(qtd+1))
+	ytq.close()
+
 	root.destroy()
 
 #Botao de Envio de artigo
