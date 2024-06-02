@@ -1,6 +1,9 @@
 from tkinter import *
 from tkinter import ttk
+from datetime import datetime
+from datetime import date
 import os
+
 
 root = Tk()
 root.geometry("600x400")
@@ -15,6 +18,16 @@ def sendMSG():
 	v = art.get("1.0", END)
 	print("escrevendo...")
 
+	# pegando dados da config
+	user = open("/home/.myOwnJournal/config.edu", "r")
+	p = user.readlines()
+	# - email do usuario (take)
+	em = p[1].replace('email', '')
+	user.close()
+
+	#pegando as horas
+	now = datetime.now()
+
 	#pegando a quantidade
 	with open("/home/.myOwnJournal/artigos/many.edu", "r") as quanto:
 		qtd = quanto.read()
@@ -22,7 +35,11 @@ def sendMSG():
 
 		# adicionando valor no arquivo
 		artigo_atual = open("/home/.myOwnJournal/artigos/art{}.txt".format(qtd+1), "w")
-		artigo_atual.write(v)
+		artigo_atual.write("""{}
+{} - {}:{}:{}
+--------------------
+{}
+--------------------""".format(em, date.today(), now.hour, now.minute, now.second, v))
 		artigo_atual.close()
 
 	# atualizando o arquivo de quantidade
